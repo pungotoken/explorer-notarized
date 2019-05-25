@@ -8,3 +8,9 @@ cp status.js ../$1-explorer/node_modules/insight-api-komodo/lib/status.js
 echo "status.js copied"
 cp bitcoind.js ../$1-explorer/node_modules/bitcore-node-komodo/lib/services/bitcoind.js
 echo "bitcoind.js copied"
+cp transaction.html ../$1-explorer/node_modules/insight-ui-komodo/public/views/transaction.html
+echo "transaction.html copied"
+cp tx.html ../$1-explorer/node_modules/insight-ui-komodo/public/views/transaction/tx.html
+echo "tx.html copied"
+cp transaction.js ../$1-explorer/node_modules/insight-api-komodo/lib/transaction.js
+echo "transactio.js copied"
