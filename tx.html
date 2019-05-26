@@ -474,10 +474,14 @@
         translate>Fee</span>: {{$root.currency.getConvertion(tx.fees)}} </span>
   </div>
   <div class="col-xs-6 col-sm-8 col-md-8 text-right">
-    <span data-ng-show="tx.confirmations" class="txvalues
-      txvalues-success">{{tx.confirmations}} <span translate>Notary Confirmations</span></span>
-    <span data-ng-show="tx.rawconfirmations" class="txvalues
-      txvalues-success">{{tx.rawconfirmations}} <span translate>Confirmations</span></span>
+    <span data-ng-show="tx.notarized" class="txvalues
+      txvalues-success"><span translate>Notarized!</span>&nbsp;<span class="glyphicon glyphicon-ok"></span></span>
+    <span data-ng-show="!tx.notarized" class="txvalues
+      txvalues-not-notarized"><span translate>Not Notarized yet!</span></span>
+    <span data-ng-show="tx.confirmations && tx.notarized" class="txvalues
+      txvalues-success">{{tx.confirmations}} <span translate>Confirmations</span></span>
+    <span data-ng-show="tx.confirmations && !tx.notarized" class="txvalues
+      txvalues-not-notarized">{{tx.confirmations}} <span translate>Confirmations</span></span>
     <span data-ng-show="!tx.confirmations" class="txvalues txvalues-danger" translate>Unconfirmed Transaction!</span>
     <span class="txvalues txvalues-primary">{{$root.currency.getConvertion(tx.valueOut)}}</span>
   </div>
