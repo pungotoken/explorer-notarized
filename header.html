@@ -40,9 +40,9 @@
               <strong>{{'Conn'|translate}}</strong> {{info.connections}}
             </span> &middot;
             <strong>{{'Height'|translate}}</strong> {{totalBlocks || info.blocks}}
-            <span data-ng-show="info.notarized"><strong>&middot;<br>{{'Notarized'|translate}}</strong>
-              {{info.notarized}}</span>
-            <span data-ng-show="!info.notarized"><strong>&middot;<br>{{'dPoW not Enabled'|translate}}</strong></span>
+            <span
+              data-ng-show="info.notarized">&middot;<br><strong>{{'Notarized'|translate}}</strong>{{info.notarized}}</span>
+            <span data-ng-show="!info.notarized">&middot;<br><strong>{{'dPoW not Enabled'|translate}}</strong></span>
           </div>
         </li>
         <!--      <li>
