@@ -33,14 +33,6 @@ StatusController.prototype.show = function (req, res) {
         res.jsonp(result);
       });
       break;
-    case 'getLastNotarizedBlockHash':
-      this.getLastNotarizedBlockHash(function (err, result) {
-        if (err) {
-          return self.common.handleErrors(err, res);
-        }
-        res.jsonp(result);
-      });
-      break;
     case 'getInfo':
     default:
       this.getInfo(function (err, result) {
@@ -71,7 +63,8 @@ StatusController.prototype.getInfo = function (callback) {
       relayfee: result.relayFee,
       errors: result.errors,
       notarized: result.notarized,
-      network: result.network
+      network: result.network,
+      lastNotarizedBlockhash: result.lastNotarizedBlockhash
     };
     callback(null, info);
   });
@@ -96,16 +89,6 @@ StatusController.prototype.getBestBlockHash = function (callback) {
   });
 };
 
-StatusController.prototype.getLastNotarizedBlockHash = function (callback) {
-  this.node.services.bitcoind.getInfo(function (err, result) {
-    if (err) {
-      return callback(err);
-    }
-    var lastNotarizedBlockhash = result.lastNotarizedBlockhash;
-
-    callback(null, lastNotarizedBlockhash);
-  });
-};
 
 StatusController.prototype.getDifficulty = function (callback) {
   this.node.services.bitcoind.getInfo(function (err, info) {
