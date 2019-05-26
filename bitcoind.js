@@ -2004,8 +2004,9 @@ Bitcoin.prototype.getDetailedTransaction = function (txid, callback) {
           hash: txid,
           locktime: result.locktime,
           fOverwintered: result.overwintered,
-          rawConfirmations: result.rawconfirmations,
-          notaryConfirmations: result.confirmations
+          rawconfirmations: result.rawconfirmations,
+          confirmations: result.confirmations,
+          lastNotarizedHeight: result.last_notarized_height
         };
 
         if (result.vin[0] && result.vin[0].coinbase) {
@@ -2116,11 +2117,13 @@ Bitcoin.prototype.getInfo = function (callback) {
       version: result.version,
       protocolVersion: result.protocolversion,
       blocks: result.blocks,
+      longestchain: result.longestchain,
       timeOffset: result.timeoffset,
       connections: result.connections,
       proxy: result.proxy,
       difficulty: result.difficulty,
       notarized: result.notarized,
+      lastNotarizedBlockhash: result.notarizedhash,
       testnet: result.testnet,
       relayFee: result.relayfee,
       errors: result.errors,
