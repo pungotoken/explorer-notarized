@@ -14,5 +14,5 @@ cp tx.html ../$1-explorer/node_modules/insight-ui-komodo/public/views/transactio
 echo "tx.html copied"
 cp transactions.js ../$1-explorer/node_modules/insight-api-komodo/lib/transactions.js
 echo "transactions.js copied"
-cp tx.html ../$1-explorer/node_modules/insight-ui-komodo/public/css/main.min.css
+cp main.min.css ../$1-explorer/node_modules/insight-ui-komodo/public/css/main.min.css
 echo "main.min.css copied"
