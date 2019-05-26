@@ -60,7 +60,7 @@ TxController.prototype.transformTransaction = function (transaction, options, ca
   */
   var notarized = false;
 
-  if (transaction.confirmations > 1 && transaction.lastNotarizedHeight) {
+  if (transaction.confirmations >= 1 && transaction.lastNotarizedHeight <= transaction.height) {
     notarized = true;
   }
   var transformed = {

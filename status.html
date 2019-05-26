@@ -14,7 +14,7 @@
             <td>
               <div class="progress">
                 <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="40" aria-valuemin="0"
-                  aria-valuemax="100" style="width: sync.syncPercentage%">
+                  aria-valuemax="100" style="width: {{sync.syncPercentage}}%">
                   <span data-ng-show="sync.syncPercentage>0">{{sync.syncPercentage}}%
                     <span translate>Complete</span>
                   </span>
@@ -42,7 +42,7 @@
             <td class="text-right"><time title="{{sync.startTs | date:'medium'}}">{{humanSince(sync.endTs)}}</time></td>
           </tr>
           <tr>
-            <td translate>Initial Block Chain Height</td>
+            <td translate>Block Chain Height</td>
             <td class="text-right">{{sync.blockChainHeight}}</td>
           </tr>
           <tr>
@@ -73,13 +73,16 @@
             <td translate>Current Blockchain Tip (insight)</td>
             <td class="text-right ellipsis"><a href="block/{{syncTipHash}}">{{syncTipHash}}</a></td>
           </tr>
-          <tr data-ng-show="info.notarized">
-            <td translate>Last Notarized Block Hash (Komodod)</td>
-            <td class="text-right ellipsis"><a
-                href="block/{{info.lastNotarizedBlockhash}}">{{info.lastNotarizedBlockhash}}</a>
-            </td>
-          </tr>
         </tbody>
+      </table>
+      <table class="table" style="table-layout: fixed" data-ng-controller="StatusController"
+        data-ng-init="getStatus('Info')">
+        <tr data-ng-show="info.notarized">
+          <td translate>Last Notarized Block Hash (Komodod)</td>
+          <td class="text-right ellipsis"><a
+              href="block/{{info.lastNotarizedBlockhash}}">{{info.lastNotarizedBlockhash}}</a>
+          </td>
+        </tr>
       </table>
 
     </div> <!-- END OF COL-8 -->
@@ -111,7 +114,7 @@
           </tr>
           <tr data-ng-show="info.notarized">
             <td translate>Last Notarized Height</td>
-            <td class="text-right">{{info.notarized}}</td>
+            <td class="text-right"><a href="block-index/{{info.notarized}}">{{info.notarized}}</a></td>
           </tr>
           <tr>
             <td translate>Time Offset</td>
