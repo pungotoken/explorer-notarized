@@ -1,0 +1,63 @@
+[{
+        "projectName": "KMD",
+        "priority": "1",
+        "ads": [{
+                "string": "Checkout our DEX",
+                "frequency": "30"
+            },
+            {
+                "string": "A wallet update is available",
+                "frequency": "always"
+            },
+            {
+                "string": "Learn about the upcoming Network Upgrade",
+                "frequency": "40"
+            },
+            {
+                "string": "Subscribe to our News Letter",
+                "frequency": "10"
+            },
+            {
+                "string": "Checkout FBF",
+                "frequency": "10"
+            },
+            {
+                "string": "Checkout Tech Tuesday Update",
+                "frequency": "10"
+            },
+            {
+                "string": "Placeholder",
+                "frequency": "never"
+            }
+        ]
+    },
+    {
+        "projectName": "LABS",
+        "priority": "1",
+        "ads": [{
+                "string": "Checkout our BCT Announcement",
+                "frequency": "always"
+            },
+            {
+                "string": "Available in agama",
+                "frequency": "always"
+            },
+            {
+                "string": "Learn about the Platform",
+                "frequency": "always"
+            },
+            {
+                "string": "Participate in the Notary Lottery",
+                "frequency": "always"
+            },
+            {
+                "string": "Claim a bug bounty",
+                "frequency": "always"
+            },
+            {
+                "string": "Create a Project",
+                "frequency": "always"
+            }
+        ]
+    }
+]
