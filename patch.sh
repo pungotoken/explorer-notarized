@@ -16,3 +16,9 @@ cp transactions.js ../$1-explorer/node_modules/insight-api-komodo/lib/transactio
 echo "transactions.js copied"
 cp main.min.css ../$1-explorer/node_modules/insight-ui-komodo/public/css/main.min.css
 echo "main.min.css copied"
+cp connection.html ../$1-explorer/node_modules/insight-ui-komodo/public/views/includes/connection.html
+echo "connection.html copied"
+cp ad.js ../$1-explorer/node_modules/insight-ui-komodo/public/src/js/controllers/ad.js
+echo "ad.js copied"
+cp app.js ../$1-explorer/node_modules/insight-ui-komodo/public/src/js/app.js
+echo "app.js copied"
