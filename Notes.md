@@ -16,5 +16,5 @@ Execute:
 then change the src files to your hearts content and then do `./node_modules/.bin/grunt compile`
 Now refresh the webpage to see your changes reflected :)
 
-the grunt compile above replaces the main.min.css file. So if had changed things there they are lost :(
+the grunt compile above replaces the main.min.css file. So if you had changed things there, they are lost :(
 Use git aggressively
