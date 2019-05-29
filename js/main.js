@@ -44,7 +44,7 @@ angular.module('insight.currency', []);
 angular.module('insight.messages', []);
 // Source: public/src/js/controllers/ad.js
 angular.module("insight.ad").controller("AdController", function ($scope, $http) {
-    $http.get("https://api.myjson.com/bins/tu54z").success(function (data, status, headers, config) {
+    $http.get("https://api.myjson.com/bins/159h0b").success(function (data, status, headers, config) {
 
         ads = {};
         priorities = {};

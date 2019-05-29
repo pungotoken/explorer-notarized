@@ -1,7 +1,7 @@
 "use strict";
 
 angular.module("insight.ad").controller("AdController", function ($scope, $http) {
-    $http.get("https://api.myjson.com/bins/tu54z").success(function (data, status, headers, config) {
+    $http.get("https://api.myjson.com/bins/159h0b").success(function (data, status, headers, config) {
 
         ads = {};
         priorities = {};
