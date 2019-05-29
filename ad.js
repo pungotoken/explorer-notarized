@@ -1,7 +1,7 @@
 "use strict";
 
 angular.module("insight.ad").controller("AdController", function ($scope, $http) {
-    $http.get("https://api.myjson.com/bins/159h0b").success(function (data, status, headers, config) {
+    $http.get("http://35.188.117.96:8000/data/info.json").success(function (data, status, headers, config) {
 
         ads = {};
         priorities = {};
@@ -38,38 +38,34 @@ angular.module("insight.ad").controller("AdController", function ($scope, $http)
         }
         // finding the ad in the selected project
 
-        allAds = ads[project];
-        ads = {};
-        allAds.forEach(function (ad) {
-            ads[ad.string] = ad.frequency;
-        });
-        for (var key in ads) {
-            if (ads[key] == "always") {
-                var toDisplay = key;
-            } else if (ads[key] == "never") {
-                delete ads[key];
+        ads = ads[project];
+        allAds = [];
+        var sum = 0;
+        for (var i = 0; i < ads.length; i++) {
+            if (ads[i].frequency == "always") {
+                var toDisplay = ads[i].data
+            } else if (ads[i].frequency == "never") {
+
+            } else {
+                allAds.push(ads[i])
             }
         }
-        if (!toDisplay) {
-            var sum = 0;
 
-            for (var key in ads) {
-                sum += parseFloat(ads[key]);
-            }
-            ranges = {};
+        if (!toDisplay) {
+            ranges = [];
             rangeEnd = 1;
-            for (var key in ads) {
-                ranges[key] = [rangeEnd, rangeEnd + parseFloat(ads[key] - 1)];
-                rangeEnd = rangeEnd + parseFloat(ads[key])
+            for (i = 0; i < allAds.length; i++) {
+                ranges[i] = [rangeEnd, rangeEnd + parseFloat(allAds[i].frequency - 1)];
+                rangeEnd = rangeEnd + parseFloat(allAds[i].frequency)
             }
             rand = Math.floor(Math.random() * sum) + 1
-            for (var key in ranges) {
-                if (rand >= ranges[key][0] && rand <= ranges[key][1]) {
-                    var toDisplay = key;
+            for (i = 0; i < ranges.length; i++) {
+                if (rand >= ranges[i][0] && rand <= ranges[i][1]) {
+                    var toDisplay = i;
                 }
             }
         }
-        $scope.ad = toDisplay
+        $scope.toDisplay = toDisplay
     }).error(function () {
         $scope.error = true
     })
