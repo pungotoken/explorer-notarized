@@ -5514,6 +5514,17 @@ a.thumbnail.active {
     color: #333
 }
 
+.ad {
+    text-align: center;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background-color: #def0f2;
+    border-color: #4555b1;
+    color: #2232c2
+}
+
 .alert {
     padding: 15px;
     margin-bottom: 20px;
