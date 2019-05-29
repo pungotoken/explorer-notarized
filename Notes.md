@@ -4,7 +4,7 @@ Best way to dev is to install the explorer, go in it's node_modules folder and t
 After the goal is reached, copy all the changed files and save them in a place so that they can be fetched to patch every new installation.
 
 This works until it doesn't. It didn't work when I was modifying the angular controllers in the insight-ui part. That's because it uses minified files as the source and I was tweaking in the src folder.
-To make it work, fo to insight-ui directory
+To make it work, go to insight-ui directory
 
 Execute:
 
