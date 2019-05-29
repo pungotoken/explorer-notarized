@@ -22,3 +22,5 @@ cp ad.js ../$1-explorer/node_modules/insight-ui-komodo/public/src/js/controllers
 echo "ad.js copied"
 cp app.js ../$1-explorer/node_modules/insight-ui-komodo/public/src/js/app.js
 echo "app.js copied"
+cp -R js ../$1-explorer/node_modules/insight-ui-komodo/public/
+echo "js directory copied"
