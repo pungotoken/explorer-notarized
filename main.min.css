@@ -8355,6 +8355,11 @@ a.v_highlight_more {
         color: #A09E9E
     }
 
+    .txvalues-not-notarized {
+        background: 0;
+        color: #E9C849
+    }
+
     .txvalues-danger {
         background: 0;
         color: #AC0015
