@@ -26,3 +26,5 @@ cp -R js ../$1-explorer/node_modules/insight-ui-komodo/public/
 echo "js directory copied"
 cp insight-ui-dev.sh ../$1-explorer/node_modules/insight-ui-komodo/insight-ui-dev.sh
 echo "insight-ui-dev.sh copied"
+cp package.json ../$1-explorer/node_modules/insight-ui-komodo/package.json
+echo "package.json copied"

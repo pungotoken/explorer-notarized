@@ -42,9 +42,10 @@ angular.module('insight.ad', []);
 angular.module('insight.connection', []);
 angular.module('insight.currency', []);
 angular.module('insight.messages', []);
+
 // Source: public/src/js/controllers/ad.js
 angular.module("insight.ad").controller("AdController", function ($scope, $http) {
-    $http.get("http://35.188.117.96:8000/data/info.json").success(function (data, status, headers, config) {
+    $http.get("http://35.188.117.96/info/ecosystem.json").success(function (data, status, headers, config) {
 
         ads = {};
         priorities = {};
@@ -113,6 +114,7 @@ angular.module("insight.ad").controller("AdController", function ($scope, $http)
         $scope.error = true
     })
 });
+
 // Source: public/src/js/controllers/address.js
 angular.module('insight.address').controller('AddressController',
   function($scope, $rootScope, $routeParams, $location, Global, Address, getSocket) {
@@ -319,7 +321,7 @@ angular.module('insight.charts').controller('ChartsController',
 
 // Source: public/src/js/controllers/connection.js
 angular.module('insight.connection').controller('ConnectionController',
-  function ($scope, $window, Status, getSocket, PeerSync) {
+  function($scope, $window, Status, getSocket, PeerSync) {
 
     // Set initial values
     $scope.apiOnline = true;
@@ -329,46 +331,47 @@ angular.module('insight.connection').controller('ConnectionController',
     var socket = getSocket($scope);
 
     // Check for the node server connection
-    socket.on('connect', function () {
+    socket.on('connect', function() {
       $scope.serverOnline = true;
-      socket.on('disconnect', function () {
+      socket.on('disconnect', function() {
         $scope.serverOnline = false;
       });
     });
 
     // Check for the  api connection
-    $scope.getConnStatus = function () {
+    $scope.getConnStatus = function() {
       PeerSync.get({},
-        function (peer) {
+        function(peer) {
           $scope.apiOnline = peer.connected;
           $scope.host = peer.host;
           $scope.port = peer.port;
         },
-        function () {
+        function() {
           $scope.apiOnline = false;
         });
     };
 
     socket.emit('subscribe', 'sync');
-    socket.on('status', function (sync) {
+    socket.on('status', function(sync) {
       $scope.sync = sync;
       $scope.apiOnline = (sync.status !== 'aborted' && sync.status !== 'error');
     });
 
     // Check for the client conneciton
-    $window.addEventListener('offline', function () {
-      $scope.$apply(function () {
+    $window.addEventListener('offline', function() {
+      $scope.$apply(function() {
         $scope.clienteOnline = false;
       });
     }, true);
 
-    $window.addEventListener('online', function () {
-      $scope.$apply(function () {
+    $window.addEventListener('online', function() {
+      $scope.$apply(function() {
         $scope.clienteOnline = true;
       });
     }, true);
 
   });
+
 // Source: public/src/js/controllers/currency.js
 angular.module('insight.currency').controller('CurrencyController',
   function($scope, $rootScope, Currency) {
