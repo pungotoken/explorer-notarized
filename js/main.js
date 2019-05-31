@@ -45,7 +45,7 @@ angular.module('insight.messages', []);
 
 // Source: public/src/js/controllers/ad.js
 angular.module("insight.ad").controller("AdController", function ($scope, $http) {
-    $http.get("http://35.188.117.96/info/ecosystem.json").success(function (data, status, headers, config) {
+    $http.get("http://data.lordofthechains.com/info/ecosystem.json").success(function (data, status, headers, config) {
 
         ads = {};
         priorities = {};
