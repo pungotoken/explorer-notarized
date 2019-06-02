@@ -8178,9 +8178,9 @@ a.v_highlight_more {
     text-align: center;
     width: 100%;
     padding: 15px;
-    left: 0px;
+    left: 0;
     right: 0;
-
+    z-index: 1000;
     position: absolute;
     background-color: #def0f2;
     border-color: #4555b1;
