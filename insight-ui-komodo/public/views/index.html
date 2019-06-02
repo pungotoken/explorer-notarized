@@ -35,9 +35,11 @@
               </td>
               <td><span class="ellipsis">{{humanSince(b.time)}}</span></td>
               <td class="text-right">{{b.txlength}}</td>
-              <td class="text-center" data-ng-show=" (b.height <= lastNotarizedHeight)  && lastNotarizedHeight"><span
+              <td class="text-center" style="color:#2FA4D7"
+                data-ng-show=" (b.height <= lastNotarizedHeight)  && lastNotarizedHeight"><span
                   class="glyphicon glyphicon-ok-sign"></span>&nbsp;&middot;&nbsp;true</td>
-              <td class="text-center" data-ng-show=" (b.height > lastNotarizedHeight)  && lastNotarizedHeight"><span
+              <td class="text-center" style="color:grey"
+                data-ng-show=" (b.height > lastNotarizedHeight)  && lastNotarizedHeight"><span
                   class="glyphicon glyphicon-remove-sign"></span>&nbsp;&middot;&nbsp;false</td>
               <td class="text-right hidden-xs"><a href="{{b.poolInfo.url}}" title="{{b.poolInfo.poolName}}"
                   target="_blank" data-ng-show="b.poolInfo">{{b.poolInfo.poolName}}</a></td>

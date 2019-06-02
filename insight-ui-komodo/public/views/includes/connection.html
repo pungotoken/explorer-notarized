@@ -1,11 +1,9 @@
-<div class="connection-status container" data-ng-controller="AdController" data-ng-show="error || toDisplay">
-  <div class="ad">
+<div class="ad" data-ng-controller="AdController" data-ng-show="error || toDisplay">
     <strong data-ng-show="error">Subscribe to Komodo Platform's Newsletter by <a
         href="https://komodoplatform.com/newsletter">Clicking Here</a> </strong>
     <strong translate data-ng-show="toDisplay">{{toDisplay.string1}} <a
         href="{{toDisplay.link}}">{{toDisplay.anchorText}}
         <span class="glyphicon glyphicon-share"></span></a> {{toDisplay.string2}}</strong>
-  </div>
 </div>
 
 <div class="connection-status container" data-ng-controller="ConnectionController">

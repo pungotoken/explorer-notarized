@@ -486,7 +486,7 @@
       txvalues-not-notarized"><span translate><a href="https://komodoplatform.com/blockchain-security-service/"><span
             class="glyphicon glyphicon-wrench"></span>&nbsp; dPoW not
           Enabled. Learn More <span class="glyphicon glyphicon-share"></span></a></span></span>
-    <span data-ng-show="!tx.lastNotarizedHeight" class="txvalues
+    <span data-ng-show="!tx.lastNotarizedHeight && tx.confirmations" class="txvalues
       txvalues-success">{{tx.confirmations}} <span translate>Confirmations</span></span>
     <span data-ng-show="!tx.confirmations" class="txvalues txvalues-danger" translate>Unconfirmed Transaction!</span>
     <span class="txvalues txvalues-primary">{{$root.currency.getConvertion(tx.valueOut)}}</span>
