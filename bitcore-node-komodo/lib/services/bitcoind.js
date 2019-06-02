@@ -1770,7 +1770,8 @@ Bitcoin.prototype.getBlockHeader = function (blockArg, callback) {
           medianTime: result.mediantime,
           nonce: result.nonce,
           bits: result.bits,
-          difficulty: result.difficulty
+          difficulty: result.difficulty,
+          lastNotarizedHeight: result.last_notarized_height
         };
         done(null, header);
       });

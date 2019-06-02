@@ -46,13 +46,13 @@ angular.module('insight.messages', []);
 // Source: public/src/js/controllers/ad.js
 angular
   .module("insight.ad")
-  .controller("AdController", function($scope, $http) {
+  .controller("AdController", function ($scope, $http) {
     $http
       .get("https://data.lordofthechains.com/info/ecosystem.json")
-      .success(function(data, status, headers, config) {
+      .success(function (data, status, headers, config) {
         ads = {};
         priorities = {};
-        data.forEach(function(project) {
+        data.forEach(function (project) {
           ads[project.projectName] = project.ads;
           priorities[project.projectName] = project.priority;
         });
@@ -94,8 +94,7 @@ angular
         for (var i = 0; i < ads.length; i++) {
           if (ads[i].frequency == "always") {
             var toDisplay = ads[i].data;
-          } else if (ads[i].frequency == "never") {
-          } else {
+          } else if (ads[i].frequency == "never") {} else {
             allAds.push(ads[i]);
           }
         }
@@ -119,11 +118,10 @@ angular
         }
         $scope.toDisplay = toDisplay;
       })
-      .error(function() {
+      .error(function () {
         $scope.error = true;
       });
   });
-
 // Source: public/src/js/controllers/address.js
 angular.module('insight.address').controller('AddressController',
   function($scope, $rootScope, $routeParams, $location, Global, Address, getSocket) {
@@ -186,104 +184,121 @@ angular.module('insight.address').controller('AddressController',
 
 // Source: public/src/js/controllers/blocks.js
 angular.module('insight.blocks').controller('BlocksController',
-  function($scope, $rootScope, $routeParams, $location, Global, Block, Blocks, BlockByHeight) {
-  $scope.global = Global;
-  $scope.loading = false;
+  function ($scope, $rootScope, $routeParams, $location, Global, Block, Blocks, BlockByHeight) {
+    $scope.global = Global;
+    $scope.loading = false;
 
-  if ($routeParams.blockHeight) {
-    BlockByHeight.get({
-      blockHeight: $routeParams.blockHeight
-    }, function(hash) {
-      $location.path('/block/' + hash.blockHash);
-    }, function() {
-      $rootScope.flashMessage = 'Bad Request';
-      $location.path('/');
-    });
-  }
-
-  //Datepicker
-  var _formatTimestamp = function (date) {
-    var yyyy = date.getUTCFullYear().toString();
-    var mm = (date.getUTCMonth() + 1).toString(); // getMonth() is zero-based
-    var dd  = date.getUTCDate().toString();
-
-    return yyyy + '-' + (mm[1] ? mm : '0' + mm[0]) + '-' + (dd[1] ? dd : '0' + dd[0]); //padding
-  };
-
-  $scope.$watch('dt', function(newValue, oldValue) {
-    if (newValue !== oldValue) {
-      $location.path('/blocks-date/' + _formatTimestamp(newValue));
+    if ($routeParams.blockHeight) {
+      BlockByHeight.get({
+        blockHeight: $routeParams.blockHeight
+      }, function (hash) {
+        $location.path('/block/' + hash.blockHash);
+      }, function () {
+        $rootScope.flashMessage = 'Bad Request';
+        $location.path('/');
+      });
     }
+
+    //Datepicker
+    var _formatTimestamp = function (date) {
+      var yyyy = date.getUTCFullYear().toString();
+      var mm = (date.getUTCMonth() + 1).toString(); // getMonth() is zero-based
+      var dd = date.getUTCDate().toString();
+
+      return yyyy + '-' + (mm[1] ? mm : '0' + mm[0]) + '-' + (dd[1] ? dd : '0' + dd[0]); //padding
+    };
+
+    $scope.$watch('dt', function (newValue, oldValue) {
+      if (newValue !== oldValue) {
+        $location.path('/blocks-date/' + _formatTimestamp(newValue));
+      }
+    });
+
+    $scope.openCalendar = function ($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+
+      $scope.opened = true;
+    };
+
+    $scope.humanSince = function (time) {
+      var m = moment.unix(time).startOf('day');
+      var b = moment().startOf('day');
+      return moment.min(m).from(b);
+    };
+
+
+    $scope.list = function () {
+      $scope.loading = true;
+
+      if ($routeParams.blockDate) {
+        $scope.detail = 'On ' + $routeParams.blockDate;
+      }
+
+      if ($routeParams.startTimestamp) {
+        var d = new Date($routeParams.startTimestamp * 1000);
+        var m = d.getMinutes();
+        if (m < 10) m = '0' + m;
+        $scope.before = ' before ' + d.getHours() + ':' + m;
+      }
+
+      $rootScope.titleDetail = $scope.detail;
+
+      Blocks.get({
+        blockDate: $routeParams.blockDate,
+        startTimestamp: $routeParams.startTimestamp
+      }, function (res) {
+        $scope.loading = false;
+        Block.get({
+          blockHash: res.blocks[0].hash
+        }, function (block) {
+          $scope.lastNotarizedHeight = block.lastNotarizedHeight;
+        }, function (e) {
+          if (e.status === 400) {
+            //  $rootScope.flashMessage = 'Invalid Transaction ID: ' + $routeParams.txId;
+          } else if (e.status === 503) {
+            $rootScope.flashMessage = 'Backend Error. ' + e.data;
+          } else {
+            //   $rootScope.flashMessage = 'Block Not Found';
+          }
+
+        });
+        $scope.blocks = res.blocks;
+        $scope.pagination = res.pagination;
+
+      });
+
+
+
+
+    };
+
+
+    $scope.findOne = function () {
+      $scope.loading = true;
+
+      Block.get({
+        blockHash: $routeParams.blockHash
+      }, function (block) {
+        $rootScope.titleDetail = block.height;
+        $rootScope.flashMessage = null;
+        $scope.loading = false;
+        $scope.block = block;
+      }, function (e) {
+        if (e.status === 400) {
+          $rootScope.flashMessage = 'Invalid Transaction ID: ' + $routeParams.txId;
+        } else if (e.status === 503) {
+          $rootScope.flashMessage = 'Backend Error. ' + e.data;
+        } else {
+          $rootScope.flashMessage = 'Block Not Found';
+        }
+        $location.path('/');
+      });
+    };
+
+    $scope.params = $routeParams;
+
   });
-
-  $scope.openCalendar = function($event) {
-    $event.preventDefault();
-    $event.stopPropagation();
-
-    $scope.opened = true;
-  };
-
-  $scope.humanSince = function(time) {
-    var m = moment.unix(time).startOf('day');
-    var b = moment().startOf('day');
-    return moment.min(m).from(b);
-  };
-
-
-  $scope.list = function() {
-    $scope.loading = true;
-
-    if ($routeParams.blockDate) {
-      $scope.detail = 'On ' + $routeParams.blockDate;
-    }
-
-    if ($routeParams.startTimestamp) {
-      var d=new Date($routeParams.startTimestamp*1000);
-      var m=d.getMinutes();
-      if (m<10) m = '0' + m;
-      $scope.before = ' before ' + d.getHours() + ':' + m;
-    }
-
-    $rootScope.titleDetail = $scope.detail;
-
-    Blocks.get({
-      blockDate: $routeParams.blockDate,
-      startTimestamp: $routeParams.startTimestamp
-    }, function(res) {
-      $scope.loading = false;
-      $scope.blocks = res.blocks;
-      $scope.pagination = res.pagination;
-    });
-  };
-
-  $scope.findOne = function() {
-    $scope.loading = true;
-
-    Block.get({
-      blockHash: $routeParams.blockHash
-    }, function(block) {
-      $rootScope.titleDetail = block.height;
-      $rootScope.flashMessage = null;
-      $scope.loading = false;
-      $scope.block = block;
-    }, function(e) {
-      if (e.status === 400) {
-        $rootScope.flashMessage = 'Invalid Transaction ID: ' + $routeParams.txId;
-      }
-      else if (e.status === 503) {
-        $rootScope.flashMessage = 'Backend Error. ' + e.data;
-      }
-      else {
-        $rootScope.flashMessage = 'Block Not Found';
-      }
-      $location.path('/');
-    });
-  };
-
-  $scope.params = $routeParams;
-
-});
-
 // Source: public/src/js/controllers/charts.js
 angular.module('insight.charts').controller('ChartsController',
   function($scope, $rootScope, $routeParams, $location, Chart, Charts) {
@@ -544,47 +559,72 @@ angular.module('insight.system').controller('HeaderController',
 var TRANSACTION_DISPLAYED = 10;
 var BLOCKS_DISPLAYED = 5;
 
-angular.module('insight.system').controller('IndexController',
-  function($scope, Global, getSocket, Blocks) {
+angular
+  .module("insight.system")
+  .controller("IndexController", function (
+    $scope,
+    Global,
+    getSocket,
+    Blocks,
+    Block
+  ) {
     $scope.global = Global;
 
-    var _getBlocks = function() {
+    var _getBlocks = function () {
       Blocks.get({
-        limit: BLOCKS_DISPLAYED
-      }, function(res) {
-        $scope.blocks = res.blocks;
-        $scope.blocksLength = res.length;
-      });
+          limit: BLOCKS_DISPLAYED
+        },
+        function (res) {
+
+          Block.get({
+            blockHash: res.blocks[0].hash
+          }, function (block) {
+            $scope.lastNotarizedHeight = block.lastNotarizedHeight;
+          }, function (e) {
+            if (e.status === 400) {
+              //  $rootScope.flashMessage = 'Invalid Transaction ID: ' + $routeParams.txId;
+            } else if (e.status === 503) {
+              $rootScope.flashMessage = 'Backend Error. ' + e.data;
+            } else {
+              //   $rootScope.flashMessage = 'Block Not Found';
+            }
+
+          });
+
+          $scope.blocks = res.blocks;
+          $scope.blocksLength = res.length;
+        }
+      );
     };
 
     var socket = getSocket($scope);
 
-    var _startSocket = function() { 
-      socket.emit('subscribe', 'inv');
-      socket.on('tx', function(tx) {
+    var _startSocket = function () {
+      socket.emit("subscribe", "inv");
+      socket.on("tx", function (tx) {
         $scope.txs.unshift(tx);
-        if (parseInt($scope.txs.length, 10) >= parseInt(TRANSACTION_DISPLAYED, 10)) {
+        if (
+          parseInt($scope.txs.length, 10) >= parseInt(TRANSACTION_DISPLAYED, 10)
+        ) {
           $scope.txs = $scope.txs.splice(0, TRANSACTION_DISPLAYED);
         }
       });
 
-      socket.on('block', function() {
+      socket.on("block", function () {
         _getBlocks();
       });
     };
 
-    socket.on('connect', function() {
+    socket.on("connect", function () {
       _startSocket();
     });
 
-
-
-    $scope.humanSince = function(time) {
+    $scope.humanSince = function (time) {
       var m = moment.unix(time);
       return moment.min(m).fromNow();
     };
 
-    $scope.index = function() {
+    $scope.index = function () {
       _getBlocks();
       _startSocket();
     };
@@ -592,7 +632,6 @@ angular.module('insight.system').controller('IndexController',
     $scope.txs = [];
     $scope.blocks = [];
   });
-
 // Source: public/src/js/controllers/messages.js
 angular.module('insight.messages').controller('VerifyMessageController',
   function($scope, $http) {
