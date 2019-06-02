@@ -1,7 +1,9 @@
 # README
 
 With this Patch, you can show the latest Notarization data on a Insight Explorer.
+
 Works with Decker's repo: https://github.com/DeckerSU/komodo-explorers-install/ (Install all Komodo ecosystem daemons and explorers)
+
 or my repo: https://github.com/gcharang/komodo-install-explorer (Useful to install just an explorer for a Komodo ecosystem daemon and blockchain you already have)
 
 You can use the patch like so:
