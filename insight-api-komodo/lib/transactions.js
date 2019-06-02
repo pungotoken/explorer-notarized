@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 
-var bitcore = require('bitcore-lib-komodo');
+var bitcore = require("bitcore-lib-komodo");
 var _ = bitcore.deps._;
 var $ = bitcore.util.preconditions;
-var Common = require('./common');
-var async = require('async');
+var Common = require("./common");
+var async = require("async");
 
 var MAXINT = 0xffffffff; // Math.pow(2, 32) - 1;
 
@@ -15,7 +15,7 @@ function TxController(node) {
   });
 }
 
-TxController.prototype.show = function (req, res) {
+TxController.prototype.show = function(req, res) {
   if (req.transaction) {
     res.jsonp(req.transaction);
   }
@@ -24,29 +24,35 @@ TxController.prototype.show = function (req, res) {
 /**
  * Find transaction by hash ...
  */
-TxController.prototype.transaction = function (req, res, next) {
+TxController.prototype.transaction = function(req, res, next) {
   var self = this;
   var txid = req.params.txid;
 
-  this.node.getDetailedTransaction(txid, function (err, transaction) {
+  this.node.getDetailedTransaction(txid, function(err, transaction) {
     if (err && err.code === -5) {
       return self.common.handleErrors(null, res);
     } else if (err) {
       return self.common.handleErrors(err, res);
     }
 
-    self.transformTransaction(transaction, function (err, transformedTransaction) {
+    self.transformTransaction(transaction, function(
+      err,
+      transformedTransaction
+    ) {
       if (err) {
         return self.common.handleErrors(err, res);
       }
       req.transaction = transformedTransaction;
       next();
     });
-
   });
 };
 
-TxController.prototype.transformTransaction = function (transaction, options, callback) {
+TxController.prototype.transformTransaction = function(
+  transaction,
+  options,
+  callback
+) {
   if (_.isFunction(options)) {
     callback = options;
     options = {};
@@ -60,7 +66,7 @@ TxController.prototype.transformTransaction = function (transaction, options, ca
   */
   var notarized = false;
 
-  if ((transaction.confirmations >= 1) && (transaction.lastNotarizedHeight <= transaction.height)) {
+  if (transaction.lastNotarizedHeight >= transaction.height) {
     notarized = true;
   }
 
@@ -78,26 +84,36 @@ TxController.prototype.transformTransaction = function (transaction, options, ca
   };
 
   if (transaction.coinbase) {
-    transformed.vin = [{
-      coinbase: transaction.inputs[0].script,
-      sequence: transaction.inputs[0].sequence,
-      n: 0
-    }];
+    transformed.vin = [
+      {
+        coinbase: transaction.inputs[0].script,
+        sequence: transaction.inputs[0].sequence,
+        n: 0
+      }
+    ];
   } else {
-    transformed.vin = transaction.inputs.map(this.transformInput.bind(this, options));
+    transformed.vin = transaction.inputs.map(
+      this.transformInput.bind(this, options)
+    );
   }
 
-  transformed.vout = transaction.outputs.map(this.transformOutput.bind(this, options));
+  transformed.vout = transaction.outputs.map(
+    this.transformOutput.bind(this, options)
+  );
 
   if (transformed.version >= 2) {
-    transformed.vjoinsplit = transaction.joinSplits.map(this.transformJoinSplit.bind(this, options));
+    transformed.vjoinsplit = transaction.joinSplits.map(
+      this.transformJoinSplit.bind(this, options)
+    );
   }
 
   transformed.blockhash = transaction.blockHash;
   transformed.blockheight = transaction.height;
   //  transformed.confirmations = confirmations;
   // TODO consider mempool txs with receivedTime?
-  var time = transaction.blockTimestamp ? transaction.blockTimestamp : Math.round(Date.now() / 1000);
+  var time = transaction.blockTimestamp
+    ? transaction.blockTimestamp
+    : Math.round(Date.now() / 1000);
   transformed.time = time;
   if (transformed.confirmations) {
     transformed.blocktime = transformed.time;
@@ -136,7 +152,7 @@ TxController.prototype.transformTransaction = function (transaction, options, ca
   callback(null, transformed);
 };
 
-TxController.prototype.transformInput = function (options, input, index) {
+TxController.prototype.transformInput = function(options, input, index) {
   // Input scripts are validated and can be assumed to be valid
   var transformed = {
     txid: input.prevTxId,
@@ -165,7 +181,7 @@ TxController.prototype.transformInput = function (options, input, index) {
   return transformed;
 };
 
-TxController.prototype.transformOutput = function (options, output, index) {
+TxController.prototype.transformOutput = function(options, output, index) {
   var transformed = {
     value: (output.satoshis / 1e8).toFixed(8),
     n: index,
@@ -180,7 +196,9 @@ TxController.prototype.transformOutput = function (options, output, index) {
 
   if (!options.noSpent) {
     transformed.spentTxId = output.spentTxId || null;
-    transformed.spentIndex = _.isUndefined(output.spentIndex) ? null : output.spentIndex;
+    transformed.spentIndex = _.isUndefined(output.spentIndex)
+      ? null
+      : output.spentIndex;
     transformed.spentHeight = output.spentHeight || null;
   }
 
@@ -192,16 +210,16 @@ TxController.prototype.transformOutput = function (options, output, index) {
   return transformed;
 };
 
-TxController.prototype.transformJoinSplit = function (options, jsdesc, index) {
+TxController.prototype.transformJoinSplit = function(options, jsdesc, index) {
   var transformed = {
     vpub_old: (jsdesc.oldZatoshis / 1e8).toFixed(8),
     vpub_new: (jsdesc.newZatoshis / 1e8).toFixed(8),
-    n: index,
+    n: index
   };
   return transformed;
 };
 
-TxController.prototype.transformInvTransaction = function (transaction) {
+TxController.prototype.transformInvTransaction = function(transaction) {
   var self = this;
 
   var valueOut = 0;
@@ -219,7 +237,9 @@ TxController.prototype.transformInvTransaction = function (transaction) {
     }
   }
 
-  var isRBF = _.any(_.pluck(transaction.inputs, 'sequenceNumber'), function (seq) {
+  var isRBF = _.any(_.pluck(transaction.inputs, "sequenceNumber"), function(
+    seq
+  ) {
     return seq < MAXINT - 1;
   });
 
@@ -227,17 +247,17 @@ TxController.prototype.transformInvTransaction = function (transaction) {
     txid: transaction.hash,
     valueOut: valueOut / 1e8,
     vout: vout,
-    isRBF: isRBF,
+    isRBF: isRBF
   };
 
   return transformed;
 };
 
-TxController.prototype.rawTransaction = function (req, res, next) {
+TxController.prototype.rawTransaction = function(req, res, next) {
   var self = this;
   var txid = req.params.txid;
 
-  this.node.getTransaction(txid, function (err, transaction) {
+  this.node.getTransaction(txid, function(err, transaction) {
     if (err && err.code === -5) {
       return self.common.handleErrors(null, res);
     } else if (err) {
@@ -245,20 +265,20 @@ TxController.prototype.rawTransaction = function (req, res, next) {
     }
 
     req.rawTransaction = {
-      'rawtx': transaction.toBuffer().toString('hex')
+      rawtx: transaction.toBuffer().toString("hex")
     };
 
     next();
   });
 };
 
-TxController.prototype.showRaw = function (req, res) {
+TxController.prototype.showRaw = function(req, res) {
   if (req.rawTransaction) {
     res.jsonp(req.rawTransaction);
   }
 };
 
-TxController.prototype.list = function (req, res) {
+TxController.prototype.list = function(req, res) {
   var self = this;
 
   var blockHash = req.query.block;
@@ -268,7 +288,7 @@ TxController.prototype.list = function (req, res) {
   var pagesTotal = 1;
 
   if (blockHash) {
-    self.node.getBlockOverview(blockHash, function (err, block) {
+    self.node.getBlockOverview(blockHash, function(err, block) {
       if (err && err.code === -5) {
         return self.common.handleErrors(null, res);
       } else if (err) {
@@ -286,24 +306,27 @@ TxController.prototype.list = function (req, res) {
         txids = block.txids;
       }
 
-      async.mapSeries(txids, function (txid, next) {
-        self.node.getDetailedTransaction(txid, function (err, transaction) {
+      async.mapSeries(
+        txids,
+        function(txid, next) {
+          self.node.getDetailedTransaction(txid, function(err, transaction) {
+            if (err) {
+              return next(err);
+            }
+            self.transformTransaction(transaction, next);
+          });
+        },
+        function(err, transformed) {
           if (err) {
-            return next(err);
+            return self.common.handleErrors(err, res);
           }
-          self.transformTransaction(transaction, next);
-        });
-      }, function (err, transformed) {
-        if (err) {
-          return self.common.handleErrors(err, res);
+
+          res.jsonp({
+            pagesTotal: pagesTotal,
+            txs: transformed
+          });
         }
-
-        res.jsonp({
-          pagesTotal: pagesTotal,
-          txs: transformed
-        });
-      });
-
+      );
     });
   } else if (address) {
     var options = {
@@ -311,23 +334,25 @@ TxController.prototype.list = function (req, res) {
       to: (page + 1) * pageLength
     };
 
-    self.node.getAddressHistory(address, options, function (err, result) {
+    self.node.getAddressHistory(address, options, function(err, result) {
       if (err) {
         return self.common.handleErrors(err, res);
       }
 
-      var txs = result.items.map(function (info) {
-        return info.tx;
-      }).filter(function (value, index, self) {
-        return self.indexOf(value) === index;
-      });
+      var txs = result.items
+        .map(function(info) {
+          return info.tx;
+        })
+        .filter(function(value, index, self) {
+          return self.indexOf(value) === index;
+        });
 
       async.map(
         txs,
-        function (tx, next) {
+        function(tx, next) {
           self.transformTransaction(tx, next);
         },
-        function (err, transformed) {
+        function(err, transformed) {
           if (err) {
             return self.common.handleErrors(err, res);
           }
@@ -339,22 +364,26 @@ TxController.prototype.list = function (req, res) {
       );
     });
   } else {
-    return self.common.handleErrors(new Error('Block hash or address expected'), res);
+    return self.common.handleErrors(
+      new Error("Block hash or address expected"),
+      res
+    );
   }
 };
 
-TxController.prototype.send = function (req, res) {
+TxController.prototype.send = function(req, res) {
   var self = this;
-  this.node.sendTransaction(req.body.rawtx, function (err, txid) {
+  this.node.sendTransaction(req.body.rawtx, function(err, txid) {
     if (err) {
       // TODO handle specific errors
       return self.common.handleErrors(err, res);
     }
 
     res.json({
-      'txid': txid
+      txid: txid
     });
   });
 };
 
 module.exports = TxController;
+
