@@ -15,7 +15,7 @@ function TxController(node) {
   });
 }
 
-TxController.prototype.show = function(req, res) {
+TxController.prototype.show = function (req, res) {
   if (req.transaction) {
     res.jsonp(req.transaction);
   }
@@ -24,18 +24,18 @@ TxController.prototype.show = function(req, res) {
 /**
  * Find transaction by hash ...
  */
-TxController.prototype.transaction = function(req, res, next) {
+TxController.prototype.transaction = function (req, res, next) {
   var self = this;
   var txid = req.params.txid;
 
-  this.node.getDetailedTransaction(txid, function(err, transaction) {
+  this.node.getDetailedTransaction(txid, function (err, transaction) {
     if (err && err.code === -5) {
       return self.common.handleErrors(null, res);
     } else if (err) {
       return self.common.handleErrors(err, res);
     }
 
-    self.transformTransaction(transaction, function(
+    self.transformTransaction(transaction, function (
       err,
       transformedTransaction
     ) {
@@ -48,7 +48,7 @@ TxController.prototype.transaction = function(req, res, next) {
   });
 };
 
-TxController.prototype.transformTransaction = function(
+TxController.prototype.transformTransaction = function (
   transaction,
   options,
   callback
@@ -66,7 +66,7 @@ TxController.prototype.transformTransaction = function(
   */
   var notarized = false;
 
-  if ((transaction.confiramations >= 1) && (transaction.lastNotarizedHeight >= transaction.height)) {
+  if ((transaction.confirmations >= 1) && (transaction.lastNotarizedHeight >= transaction.height)) {
     notarized = true;
   }
 
@@ -80,17 +80,16 @@ TxController.prototype.transformTransaction = function(
     locktime: transaction.locktime,
     confirmations: transaction.rawconfirmations,
     notarized: notarized,
+    height: transaction.height,
     lastNotarizedHeight: transaction.lastNotarizedHeight
   };
 
   if (transaction.coinbase) {
-    transformed.vin = [
-      {
-        coinbase: transaction.inputs[0].script,
-        sequence: transaction.inputs[0].sequence,
-        n: 0
-      }
-    ];
+    transformed.vin = [{
+      coinbase: transaction.inputs[0].script,
+      sequence: transaction.inputs[0].sequence,
+      n: 0
+    }];
   } else {
     transformed.vin = transaction.inputs.map(
       this.transformInput.bind(this, options)
@@ -111,9 +110,9 @@ TxController.prototype.transformTransaction = function(
   transformed.blockheight = transaction.height;
   //  transformed.confirmations = confirmations;
   // TODO consider mempool txs with receivedTime?
-  var time = transaction.blockTimestamp
-    ? transaction.blockTimestamp
-    : Math.round(Date.now() / 1000);
+  var time = transaction.blockTimestamp ?
+    transaction.blockTimestamp :
+    Math.round(Date.now() / 1000);
   transformed.time = time;
   if (transformed.confirmations) {
     transformed.blocktime = transformed.time;
@@ -152,7 +151,7 @@ TxController.prototype.transformTransaction = function(
   callback(null, transformed);
 };
 
-TxController.prototype.transformInput = function(options, input, index) {
+TxController.prototype.transformInput = function (options, input, index) {
   // Input scripts are validated and can be assumed to be valid
   var transformed = {
     txid: input.prevTxId,
@@ -181,7 +180,7 @@ TxController.prototype.transformInput = function(options, input, index) {
   return transformed;
 };
 
-TxController.prototype.transformOutput = function(options, output, index) {
+TxController.prototype.transformOutput = function (options, output, index) {
   var transformed = {
     value: (output.satoshis / 1e8).toFixed(8),
     n: index,
@@ -196,9 +195,9 @@ TxController.prototype.transformOutput = function(options, output, index) {
 
   if (!options.noSpent) {
     transformed.spentTxId = output.spentTxId || null;
-    transformed.spentIndex = _.isUndefined(output.spentIndex)
-      ? null
-      : output.spentIndex;
+    transformed.spentIndex = _.isUndefined(output.spentIndex) ?
+      null :
+      output.spentIndex;
     transformed.spentHeight = output.spentHeight || null;
   }
 
@@ -210,7 +209,7 @@ TxController.prototype.transformOutput = function(options, output, index) {
   return transformed;
 };
 
-TxController.prototype.transformJoinSplit = function(options, jsdesc, index) {
+TxController.prototype.transformJoinSplit = function (options, jsdesc, index) {
   var transformed = {
     vpub_old: (jsdesc.oldZatoshis / 1e8).toFixed(8),
     vpub_new: (jsdesc.newZatoshis / 1e8).toFixed(8),
@@ -219,7 +218,7 @@ TxController.prototype.transformJoinSplit = function(options, jsdesc, index) {
   return transformed;
 };
 
-TxController.prototype.transformInvTransaction = function(transaction) {
+TxController.prototype.transformInvTransaction = function (transaction) {
   var self = this;
 
   var valueOut = 0;
@@ -237,7 +236,7 @@ TxController.prototype.transformInvTransaction = function(transaction) {
     }
   }
 
-  var isRBF = _.any(_.pluck(transaction.inputs, "sequenceNumber"), function(
+  var isRBF = _.any(_.pluck(transaction.inputs, "sequenceNumber"), function (
     seq
   ) {
     return seq < MAXINT - 1;
@@ -253,11 +252,11 @@ TxController.prototype.transformInvTransaction = function(transaction) {
   return transformed;
 };
 
-TxController.prototype.rawTransaction = function(req, res, next) {
+TxController.prototype.rawTransaction = function (req, res, next) {
   var self = this;
   var txid = req.params.txid;
 
-  this.node.getTransaction(txid, function(err, transaction) {
+  this.node.getTransaction(txid, function (err, transaction) {
     if (err && err.code === -5) {
       return self.common.handleErrors(null, res);
     } else if (err) {
@@ -272,13 +271,13 @@ TxController.prototype.rawTransaction = function(req, res, next) {
   });
 };
 
-TxController.prototype.showRaw = function(req, res) {
+TxController.prototype.showRaw = function (req, res) {
   if (req.rawTransaction) {
     res.jsonp(req.rawTransaction);
   }
 };
 
-TxController.prototype.list = function(req, res) {
+TxController.prototype.list = function (req, res) {
   var self = this;
 
   var blockHash = req.query.block;
@@ -288,7 +287,7 @@ TxController.prototype.list = function(req, res) {
   var pagesTotal = 1;
 
   if (blockHash) {
-    self.node.getBlockOverview(blockHash, function(err, block) {
+    self.node.getBlockOverview(blockHash, function (err, block) {
       if (err && err.code === -5) {
         return self.common.handleErrors(null, res);
       } else if (err) {
@@ -308,15 +307,15 @@ TxController.prototype.list = function(req, res) {
 
       async.mapSeries(
         txids,
-        function(txid, next) {
-          self.node.getDetailedTransaction(txid, function(err, transaction) {
+        function (txid, next) {
+          self.node.getDetailedTransaction(txid, function (err, transaction) {
             if (err) {
               return next(err);
             }
             self.transformTransaction(transaction, next);
           });
         },
-        function(err, transformed) {
+        function (err, transformed) {
           if (err) {
             return self.common.handleErrors(err, res);
           }
@@ -334,25 +333,25 @@ TxController.prototype.list = function(req, res) {
       to: (page + 1) * pageLength
     };
 
-    self.node.getAddressHistory(address, options, function(err, result) {
+    self.node.getAddressHistory(address, options, function (err, result) {
       if (err) {
         return self.common.handleErrors(err, res);
       }
 
       var txs = result.items
-        .map(function(info) {
+        .map(function (info) {
           return info.tx;
         })
-        .filter(function(value, index, self) {
+        .filter(function (value, index, self) {
           return self.indexOf(value) === index;
         });
 
       async.map(
         txs,
-        function(tx, next) {
+        function (tx, next) {
           self.transformTransaction(tx, next);
         },
-        function(err, transformed) {
+        function (err, transformed) {
           if (err) {
             return self.common.handleErrors(err, res);
           }
@@ -371,9 +370,9 @@ TxController.prototype.list = function(req, res) {
   }
 };
 
-TxController.prototype.send = function(req, res) {
+TxController.prototype.send = function (req, res) {
   var self = this;
-  this.node.sendTransaction(req.body.rawtx, function(err, txid) {
+  this.node.sendTransaction(req.body.rawtx, function (err, txid) {
     if (err) {
       // TODO handle specific errors
       return self.common.handleErrors(err, res);
@@ -386,4 +385,3 @@ TxController.prototype.send = function(req, res) {
 };
 
 module.exports = TxController;
-
