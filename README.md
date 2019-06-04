@@ -38,3 +38,6 @@ cp ./src/css/common.css ./css/common.min.css
 ```
 
 - Step4: Look at the file `./css/common.min.css` and change the styles that you wish to. These changes will override the styles that are in `./css/main.min.css`.
+
+- Step5: Example can be seen at https://github.com/DeckerSU/komodo-explorers-install/tree/master/overlay/BNTN-explorer/node_modules/insight-ui-komodo/public
+**Note:** Regarding `css` and `views` in the above directory; Don't replace the files from the patch with these files directly. See what changes were made by comparing with the files in the patch and just make those changes.
