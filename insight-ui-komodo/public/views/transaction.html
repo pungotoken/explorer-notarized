@@ -13,7 +13,7 @@
       <div class="col-md-6 col-lg-5 text-right">
         <span data-ng-show="tx.notarized && tx.lastNotarizedHeight" class="txvalues
       txvalues-success"><span class="glyphicon glyphicon-lock"></span>&nbsp;<span translate>Notarized!</span></span>
-        <span data-ng-show="!tx.notarized && tx.lastNotarizedHeight" class="txvalues
+        <span data-ng-show="tx.confirmations && !tx.notarized && tx.lastNotarizedHeight" class="txvalues
       txvalues-not-notarized"><span translate>Not Notarized yet!</span></span>
         <span data-ng-show="tx.confirmations && tx.notarized && tx.lastNotarizedHeight" class="txvalues
       txvalues-success">{{tx.confirmations}} <span translate>Confirmations</span></span>
