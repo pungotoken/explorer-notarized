@@ -94,12 +94,18 @@ angular
         for (var i = 0; i < ads.length; i++) {
           if (ads[i].frequency == "always") {
             var toDisplay = ads[i].data;
-          } else if (ads[i].frequency == "never") {} else {
+          } else if (ads[i].frequency == "never") {
+
+          } else {
             allAds.push(ads[i]);
           }
         }
 
+
         if (!toDisplay) {
+          for (var i = 0; i < allAds.length; i++) {
+            sum += parseFloat(allAds[i].frequency);
+          }
           ranges = [];
           rangeEnd = 1;
           for (i = 0; i < allAds.length; i++) {
@@ -112,7 +118,7 @@ angular
           rand = Math.floor(Math.random() * sum) + 1;
           for (i = 0; i < ranges.length; i++) {
             if (rand >= ranges[i][0] && rand <= ranges[i][1]) {
-              var toDisplay = i;
+              var toDisplay = allAds[i].data;
             }
           }
         }
@@ -299,6 +305,7 @@ angular.module('insight.blocks').controller('BlocksController',
     $scope.params = $routeParams;
 
   });
+
 // Source: public/src/js/controllers/charts.js
 angular.module('insight.charts').controller('ChartsController',
   function($scope, $rootScope, $routeParams, $location, Chart, Charts) {
@@ -632,6 +639,7 @@ angular
     $scope.txs = [];
     $scope.blocks = [];
   });
+
 // Source: public/src/js/controllers/messages.js
 angular.module('insight.messages').controller('VerifyMessageController',
   function($scope, $http) {
