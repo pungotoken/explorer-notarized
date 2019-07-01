@@ -2,13 +2,13 @@
 
 angular
   .module("insight.ad")
-  .controller("AdController", function($scope, $http) {
+  .controller("AdController", function ($scope, $http) {
     $http
       .get("https://data.lordofthechains.com/info/ecosystem.json")
-      .success(function(data, status, headers, config) {
+      .success(function (data, status, headers, config) {
         ads = {};
         priorities = {};
-        data.forEach(function(project) {
+        data.forEach(function (project) {
           ads[project.projectName] = project.ads;
           priorities[project.projectName] = project.priority;
         });
@@ -51,12 +51,17 @@ angular
           if (ads[i].frequency == "always") {
             var toDisplay = ads[i].data;
           } else if (ads[i].frequency == "never") {
+
           } else {
             allAds.push(ads[i]);
           }
         }
 
+
         if (!toDisplay) {
+          for (var i = 0; i < allAds.length; i++) {
+            sum += parseFloat(allAds[i].frequency);
+          }
           ranges = [];
           rangeEnd = 1;
           for (i = 0; i < allAds.length; i++) {
@@ -69,13 +74,13 @@ angular
           rand = Math.floor(Math.random() * sum) + 1;
           for (i = 0; i < ranges.length; i++) {
             if (rand >= ranges[i][0] && rand <= ranges[i][1]) {
-              var toDisplay = i;
+              var toDisplay = allAds[i].data;
             }
           }
         }
         $scope.toDisplay = toDisplay;
       })
-      .error(function() {
+      .error(function () {
         $scope.error = true;
       });
   });
