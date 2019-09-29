@@ -11,17 +11,17 @@ or my repo: https://github.com/gcharang/komodo-install-explorer (Useful to insta
 You can use the patch like so:
 
 ```bash
-#"cd" into the directory where the explorer is installed. i.e., the directories "ASSETCHAINNAME-explorer" and this repo should on the same level
+#"cd" into the directory where the explorer is installed. i.e., the directories "SMARTCHAINNAME-explorer" and this repo should on the same level
 git clone https://github.com/gcharang/explorer-notarized
 cd explorer-notarized
-./patch.sh ASSETCHAINNAME
+./patch.sh SMARTCHAINNAME
 ```
 
 ## Apply custom styles to the explorer
 
 After the patch is appled,
 
-- Step1: `cd` to the directory: `ASSETCHAINNAME-explorer/node_modules/insight-ui-komodo/public`
+- Step1: `cd` to the directory: `SMARTCHAINNAME-explorer/node_modules/insight-ui-komodo/public`
 
 - Step2: Edit the `index.html` in that directory to remove the comment: 
 ```
