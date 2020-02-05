@@ -19,7 +19,7 @@ then change the src files to your hearts content and then do `./node_modules/.bi
 Now refresh the hosted webpage to see your changes reflected :)
 
 To change css properly, change the css in ./public/src/css/common.css then compile it. The resulting main.min.css will have the necessary changes
-To override specific css to reskin or change the theme of the explorer, add a file named common.min.css to the directory ./public/css/ and add all the overrides to it
+To override specific css to reskin or change the theme of the explorer, add a file named common.min.css to the directory ./public/css/ and add all the overrides to it and add the line `<link rel="stylesheet" href="css/common.min.css">` in place of `<!---Remove this comment, add a file named './css/common.min.css' in '/public' with the styles you want to override <link rel="stylesheet" href="css/common.min.css"> -->` in the file `SMARTCHAINNAME-explorer/node_modules/insight-ui-komodo/public/index.html`
 
 See the Readme for more info.
 
