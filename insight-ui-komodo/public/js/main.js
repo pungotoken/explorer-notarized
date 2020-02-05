@@ -48,7 +48,7 @@ angular
   .module("insight.ad")
   .controller("AdController", function ($scope, $http) {
     $http
-      .get("https://data.lordofthechains.com/info/ecosystem.json")
+      .get("https://kmd-data.s3.us-east-2.amazonaws.com/info/ecosystem.json")
       .success(function (data, status, headers, config) {
         ads = {};
         priorities = {};
