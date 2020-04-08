@@ -1,6 +1,6 @@
 // Source: public/src/js/app.js
 var testnet = false;
-var netSymbol = testnet ? 'TAZ' : 'KMD';
+var netSymbol = testnet ? 'TAZ' : 'STBL';
 
 var defaultLanguage = localStorage.getItem('insight-language') || 'en';
 var defaultCurrency = localStorage.getItem('insight-currency') || netSymbol;
@@ -486,17 +486,8 @@ angular.module('insight.system').controller('FooterController',
       name: 'English',
       isoCode: 'en',
     }, {
-      name: 'Deutsch',
-      isoCode: 'de_DE',
-    }, {
-      name: 'Русский',
-      isoCode: 'ru',
-    }, {
       name: 'Spanish',
       isoCode: 'es',
-    }, {
-      name: 'Japanese',
-      isoCode: 'ja',
     }];
 
     $scope.setLanguage = function(isoCode) {
